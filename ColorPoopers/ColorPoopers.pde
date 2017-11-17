@@ -8,7 +8,7 @@ void setup() {
   frameRate(100);
 
   grid = new ColorGrid(width/Globals.DisplayScaleFactor, height/Globals.DisplayScaleFactor);
-  colony = new Colony(1, grid);
+  colony = new Colony(100, grid);
 }
 
 void draw() {
@@ -21,9 +21,11 @@ void draw() {
   }
 
   grid.show();
-  colony.show();
+  //clear();
+  //colony.show();
 
   if (mousePressed) {
     colony.dumpBacteriaStats();
   }
+  //println(frameRate);
 }

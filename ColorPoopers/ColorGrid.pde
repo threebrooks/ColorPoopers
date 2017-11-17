@@ -15,7 +15,7 @@ class ColorGrid {
       }
     }
 
-    float noiseScale = 0.1;
+    float noiseScale = 0.01;
     for (int x = 0; x < this.width; x++) {
       for (int y = 0; y < this.height; y++) {
         float distFromCenter = sqrt((x-this.width/2)*(x-this.width/2)+(y-this.height/2)*(y-this.height/2));

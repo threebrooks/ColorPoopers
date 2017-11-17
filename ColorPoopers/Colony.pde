@@ -7,8 +7,8 @@ class Colony {
   Colony(int numBac, ColorGrid _grid) {
     grid = _grid;
     for (int bacIdx = 0; bacIdx < numBac; bacIdx++) {
-      int x = (int)random(grid.width/10);
-      int y = (int)random(grid.height/10);
+      int x = (int)random(grid.width);
+      int y = (int)random(grid.height);
       bacteria.add(new Bacteria(x, y, Globals.BacteriaInitMuHue, Globals.BacteriaInitSigmaHue, Globals.BacteriaInitHealth, Globals.BacteriaInitSplitThreshold, Globals.BacteriaInitMutationMuHueMag));
     }
   }
