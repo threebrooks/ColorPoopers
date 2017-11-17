@@ -9,6 +9,7 @@ float magToBrightness(float m) {
 class Bacteria {
   float muHue;
   float sigmaHue;
+  float muHueMutationMag;
 
   int x;
   int y;
@@ -16,13 +17,14 @@ class Bacteria {
   float health;
   float splitThreshold;
 
-  Bacteria(int _x, int _y, float _muHue, float _sigmaHue, float _health, float _splitThreshold) {
+  Bacteria(int _x, int _y, float _muHue, float _sigmaHue, float _health, float _splitThreshold, float _muHueMutationMag) {
     x = _x;
     y = _y;
     muHue = _muHue;
     sigmaHue = _sigmaHue;
     health = _health;
     splitThreshold = _splitThreshold;
+    muHueMutationMag = _muHueMutationMag;
   }
 
   class DirHelper {
@@ -61,7 +63,7 @@ class Bacteria {
     
     // New hue is essentially a mixture of old and poop
     float poopColor = Angle.opposite(muHue);
-    pointUnderMe.hue  = poopColor;//Angle.limit(pointUnderMe.hue+underMeEatProb*Angle.minDist(poopColor, pointUnderMe.hue));
+    pointUnderMe.hue  = Angle.limit(pointUnderMe.hue+underMeEatProb*Angle.minDist(poopColor, pointUnderMe.hue));
 
     ArrayList<DirHelper> possibleDirections = new ArrayList<DirHelper>();
     for (int dx = -1; dx <= 1; dx++) {
@@ -126,10 +128,11 @@ class Bacteria {
     Bacteria newBac = new Bacteria(
       grid.wrapX(x+bestDir.dx), 
       grid.wrapY(y+bestDir.dy), 
-      Angle.limit(muHue+random(-Globals.BacteriaMutationMuHueMag, Globals.BacteriaMutationMuHueMag)), 
+      Angle.limit(muHue+random(-muHueMutationMag, muHueMutationMag)), 
       sigmaHue*(1.0+random(-Globals.BacteriaMutationSigmaHueMag, Globals.BacteriaMutationSigmaHueMag)),
       health, 
-      splitThreshold+random(-Globals.BacteriaMutationSplitThreshMag, Globals.BacteriaMutationSplitThreshMag));
+      splitThreshold+random(-Globals.BacteriaMutationSplitThreshMag, Globals.BacteriaMutationSplitThreshMag),
+      muHueMutationMag*(1.0+random(-Globals.BacteriaMutationSquaredMuHueMag, Globals.BacteriaMutationSquaredMuHueMag)));
       
     ColorGridPoint p = grid.getVal(newBac.x, newBac.y);
     p.occ = true;

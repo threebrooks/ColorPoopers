@@ -19,10 +19,10 @@ class ColorGrid {
     for (int x = 0; x < this.width; x++) {
       for (int y = 0; y < this.height; y++) {
         float distFromCenter = sqrt((x-this.width/2)*(x-this.width/2)+(y-this.height/2)*(y-this.height/2));
-        float hue = map(distFromCenter, 0, sqrt(width*width/4+height*height/4), 0, TWO_PI);
+        //float hue = map(distFromCenter, 0, sqrt(width*width/4+height*height/4), 0, TWO_PI);
         //float hue = TWO_PI*noise(noiseScale*x, noiseScale*y);
         //float hue = PI*(1.0+atan(2*(x-this.width/2)/(float)this.width));
-        //float hue = (x > this.width/2) ? 0.0 : PI;
+        float hue = (x > -1) ? 0.0 : PI;
         ColorGridPoint point = getVal(x,y);
         point.hue = hue;
       }

@@ -9,7 +9,7 @@ class Colony {
     for (int bacIdx = 0; bacIdx < numBac; bacIdx++) {
       int x = (int)random(grid.width/10);
       int y = (int)random(grid.height/10);
-      bacteria.add(new Bacteria(x, y, Globals.BacteriaInitMuHue, Globals.BacteriaInitSigmaHue, Globals.BacteriaInitHealth, Globals.BacteriaInitSplitThreshold));
+      bacteria.add(new Bacteria(x, y, Globals.BacteriaInitMuHue, Globals.BacteriaInitSigmaHue, Globals.BacteriaInitHealth, Globals.BacteriaInitSplitThreshold, Globals.BacteriaInitMutationMuHueMag));
     }
   }
 
