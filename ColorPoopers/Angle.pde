@@ -3,7 +3,7 @@ static class Angle {
     float dist = a-b;
     if (dist >= PI) dist -= TWO_PI;
     if (dist <= -PI) dist += TWO_PI;
-    return abs(dist);
+    return dist;
   }
   
   static public float opposite(float a) {

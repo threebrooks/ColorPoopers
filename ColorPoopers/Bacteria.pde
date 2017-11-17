@@ -47,15 +47,21 @@ class Bacteria {
     return h.get(h.size()-1);
   }
 
-  public void step(ColorGrid grid) {
+  public void step(ColorGrid grid, boolean debug) {
     //println("x:" + x +",y "+y);
 
     ColorGridPoint pointUnderMe = grid.getVal(x, y);
-    health -= Globals.CostOfLiving;
-    float nibble = Globals.EatPercentage*pointUnderMe.mag;
+    health -= Globals.BacteriaCostOfLiving;
+    
+    float underMeHueDist = Angle.minDist(pointUnderMe.hue, muHue);
+    float underMeEatProb = exp(-underMeHueDist*underMeHueDist/sigmaHue);
+    float nibble = underMeEatProb*pointUnderMe.mag;
     health += nibble;
     pointUnderMe.mag -= nibble;
+    
+    // New hue is essentially a mixture of old and poop
     float poopColor = Angle.opposite(muHue);
+    pointUnderMe.hue  = poopColor;//Angle.limit(pointUnderMe.hue+underMeEatProb*Angle.minDist(poopColor, pointUnderMe.hue));
 
     ArrayList<DirHelper> possibleDirections = new ArrayList<DirHelper>();
     for (int dx = -1; dx <= 1; dx++) {
@@ -77,7 +83,7 @@ class Bacteria {
       }
     }
     
-    //println(bestDirections.size());
+    //if (debug) println(possibleDirections.size());
 
     if (possibleDirections.size() > 0) {
       DirHelper bestDir = chooseFromDirHelpers(possibleDirections);
@@ -88,13 +94,9 @@ class Bacteria {
       x = grid.wrapX(x+bestDir.dx);
       y = grid.wrapY(y+bestDir.dy);
       
-      health += bestDir.prob;
-      
       ColorGridPoint newP = grid.getVal(x, y);
       newP.occ = true;
     }
-
-    // println("angle:" + accumAngle +", dx "+nextDx+", dy "+nextDy);
   }
   
   Bacteria procreate(ColorGrid grid) {
@@ -122,12 +124,15 @@ class Bacteria {
     health /= 2;
 
     Bacteria newBac = new Bacteria(
-      x+bestDir.dx, 
-      y+bestDir.dy, 
-      Angle.limit(muHue+random(-Globals.MutationMuHueMag, Globals.MutationMuHueMag)), 
-      sigmaHue,
+      grid.wrapX(x+bestDir.dx), 
+      grid.wrapY(y+bestDir.dy), 
+      Angle.limit(muHue+random(-Globals.BacteriaMutationMuHueMag, Globals.BacteriaMutationMuHueMag)), 
+      sigmaHue*(1.0+random(-Globals.BacteriaMutationSigmaHueMag, Globals.BacteriaMutationSigmaHueMag)),
       health, 
-      splitThreshold+random(-Globals.MutationSplitThreshMag, Globals.MutationSplitThreshMag));
+      splitThreshold+random(-Globals.BacteriaMutationSplitThreshMag, Globals.BacteriaMutationSplitThreshMag));
+      
+    ColorGridPoint p = grid.getVal(newBac.x, newBac.y);
+    p.occ = true;
       
     return newBac;
   }

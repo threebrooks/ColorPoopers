@@ -1,5 +1,6 @@
 ColorGrid grid = null;
 Colony colony = null;
+boolean showColony = true;
 
 void setup() {
 
@@ -17,11 +18,18 @@ void draw() {
   for (int stepIdx = 0; stepIdx < 1; stepIdx++) {
     colony.step();
     colony.procreate();
-    if (frameCount % 100 == 0) println(colony.bacteria.size());
+    //if (frameCount % 100 == 0) println(colony.bacteria.size());
   }
-  
-  //background(0);
-  //grid.show();
-  colony.show();
-  
+
+  if (showColony) {
+    background(0);
+    colony.show();
+  } else {
+    grid.show();
+  }
+
+  if (mousePressed) {
+    colony.dumpBacteriaStats();
+    showColony = !showColony;
+  }
 }

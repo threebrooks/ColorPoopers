@@ -4,6 +4,7 @@ class ColorGrid {
   int height;
 
   ColorGrid(int _width, int _height) {
+    println(_width+"x"+_height);
     this.width = _width;
     this.height = _height;
     grid = new ArrayList<ArrayList<ColorGridPoint>>(this.width);
@@ -21,7 +22,7 @@ class ColorGrid {
         float hue = map(distFromCenter, 0, sqrt(width*width/4+height*height/4), 0, TWO_PI);
         //float hue = TWO_PI*noise(noiseScale*x, noiseScale*y);
         //float hue = PI*(1.0+atan(2*(x-this.width/2)/(float)this.width));
-        //float hue = (x > this.width) ? 0.0 : PI;
+        //float hue = (x > this.width/2) ? 0.0 : PI;
         ColorGridPoint point = getVal(x,y);
         point.hue = hue;
       }

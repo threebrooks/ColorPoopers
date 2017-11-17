@@ -7,11 +7,9 @@ class Colony {
   Colony(int numBac, ColorGrid _grid) {
     grid = _grid;
     for (int bacIdx = 0; bacIdx < numBac; bacIdx++) {
-      float muHue = 0;//random(TWO_PI);
-      float sigmaHue = TWO_PI/16.0;
       int x = (int)random(grid.width/10);
       int y = (int)random(grid.height/10);
-      bacteria.add(new Bacteria(x, y, muHue, sigmaHue, 1.0, 100.0));
+      bacteria.add(new Bacteria(x, y, Globals.BacteriaInitMuHue, Globals.BacteriaInitSigmaHue, Globals.BacteriaInitHealth, Globals.BacteriaInitSplitThreshold));
     }
   }
 
@@ -19,30 +17,26 @@ class Colony {
     //println(bacteria.size());
     for (int bacIdx = 0; bacIdx < bacteria.size(); bacIdx++) {
       Bacteria bac = bacteria.get(bacIdx);
-      bac.step(grid);
+      bac.step(grid, bacIdx == bacteria.size()/2);
     }
   }
-  
+
   void procreate() {
-    ArrayList<Bacteria> newList = new ArrayList<Bacteria>();
-    for (int bacIdx = 0; bacIdx < bacteria.size() ; bacIdx++) {
+    int currentSize = bacteria.size();
+    //println(currentSize);
+    for (int bacIdx = 0; bacIdx < currentSize; bacIdx++) {
       Bacteria bac = bacteria.get(bacIdx);
       Bacteria clone = bac.procreate(grid);
-      if (clone != null) newList.add(clone);
+      if (clone != null) bacteria.add(clone);
     }
-    for(Bacteria b : newList) {
-      bacteria.add(b);
-      ColorGridPoint pointUnderNewBac = grid.getVal(b.x, b.y);
-      pointUnderNewBac.occ = true;
-    }
-    
+
     ArrayList<Bacteria> deathList = new ArrayList<Bacteria>();
-    for (int bacIdx = 0; bacIdx < bacteria.size() ; bacIdx++) {
+    for (int bacIdx = 0; bacIdx < bacteria.size(); bacIdx++) {
       Bacteria bac = bacteria.get(bacIdx);
       if (bac.health < 0) deathList.add(bac);
     }
-    for(Bacteria b : deathList) {
-      bacteria.remove(b);
+    for (Bacteria b : deathList) {
+      if (!bacteria.remove(b)) println("WTF");
       ColorGridPoint pointUnderNewBac = grid.getVal(b.x, b.y);
       pointUnderNewBac.occ = false;
     }
@@ -52,6 +46,29 @@ class Colony {
     for (int bacIdx = 0; bacIdx < bacteria.size(); bacIdx++) {
       Bacteria bac = bacteria.get(bacIdx);
       bac.show();
+    }
+  }
+
+  void dumpBacteriaStats() {
+    try {
+      int res = 100;
+      int[] histo = new int[res];
+      float totalHealth = 0.0;
+      for (int bacIdx = 0; bacIdx < bacteria.size(); bacIdx++) {
+        Bacteria bac = bacteria.get(bacIdx);
+        histo[(int)(res*bac.muHue/TWO_PI)]++;
+        totalHealth += bac.health;
+        //println(bacIdx+": x="+bac.x+", y="+bac.y+", h="+bac.health+", mu="+bac.muHue+", sig="+bac.sigmaHue);
+      }
+      println("T: "+totalHealth/bacteria.size());
+      PrintWriter p = new PrintWriter("/tmp/bac.stats");
+      for (int idx = 0; idx < res; idx++) {
+        p.write(histo[idx]+"\n");
+      }
+      p.close();
+    } 
+    catch (Exception e) {
+      println(e.getMessage());
     }
   }
 }
