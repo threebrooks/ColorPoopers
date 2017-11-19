@@ -1,11 +1,12 @@
 ColorGrid grid = null;
 Colony colony = null;
+boolean showColony = false;
 
 void setup() {
 
   size(600, 480);
   colorMode(HSB);
-  frameRate(1);
+  frameRate(100);
 
   grid = new ColorGrid(width/Globals.DisplayScaleFactor, height/Globals.DisplayScaleFactor);
   colony = new Colony(1, grid);
@@ -20,12 +21,16 @@ void draw() {
     //if (frameCount % 100 == 0) println(colony.bacteria.size());
   }
 
-  grid.show();
-  //clear();
-  //colony.show();
+  clear();
+  if (showColony) {
+    colony.show();
+  } else {
+     grid.show(); 
+  }
 
-  if (true) {
+  if (mousePressed) {
     colony.dumpBacteriaStats();
+    showColony = !showColony;
   }
   //println(frameRate);
 }

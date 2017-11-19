@@ -5,10 +5,10 @@ static class Math {
   }
   
   static double customProb1(float x, double c) {
-    print("x "+x+",c "+c);
-    double invCp1 = 1.0/(c+1.0);
-    double invCm1 = 1.0/(c-1.0);
-    double outVal = (1.0/(c+1.0+sin(x))-invCp1)/(invCm1-invCp1);
+    //print("x "+x+",c "+c);
+    double outVal = (1.0/(c+1.0+sin(x-PI/2))-1.0/(c+2.0))
+                       /
+                    (1.0/c-1.0/(c+2.0));
     //println(" = "+outVal);
     return outVal;
   }

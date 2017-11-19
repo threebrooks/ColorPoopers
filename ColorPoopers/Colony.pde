@@ -12,7 +12,8 @@ class Colony {
       Mutator hueMutator = new Mutator(MutatorType.Angle, Globals.BacteriaInitHue, Globals.BacteriaInitHueROM, Globals.BacteriaInitHueROROM);
       Mutator foodSelectMutator = new Mutator(MutatorType.ZeroToInfinity, Globals.BacteriaInitFoodSelect, Globals.BacteriaInitFoodSelectROM, Globals.BacteriaInitFoodSelectROROM);
       Mutator splitThreshMutator = new Mutator(MutatorType.ZeroToInfinity, Globals.BacteriaInitSplitThreshold, Globals.BacteriaInitSplitThresholdROM, Globals.BacteriaInitSplitThresholdROROM);
-      bacteria.add(new Bacteria(x, y, hueMutator, foodSelectMutator, Globals.BacteriaInitHealth, splitThreshMutator));
+      Mutator directionMutator = new Mutator(MutatorType.Angle, Globals.BacteriaInitDir, Globals.BacteriaInitDirROM, Globals.BacteriaInitDirROROM);
+      bacteria.add(new Bacteria(x, y, hueMutator, foodSelectMutator, Globals.BacteriaInitHealth, splitThreshMutator, directionMutator));
     }
   }
 

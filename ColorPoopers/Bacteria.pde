@@ -10,19 +10,21 @@ class Bacteria {
   Mutator hue;
   Mutator hueFoodSelectivity;
   Mutator splitThreshold;
+  Mutator preferredDirection;
 
   int x;
   int y;
 
   float health;
 
-  Bacteria(int _x, int _y, Mutator _hue, Mutator _hueFoodSelectivity, float _health, Mutator _splitThreshold) {
+  Bacteria(int _x, int _y, Mutator _hue, Mutator _hueFoodSelectivity, float _health, Mutator _splitThreshold, Mutator _preferredDirection) {
     x = _x;
     y = _y;
     hue = _hue;
     hueFoodSelectivity = _hueFoodSelectivity;
     health = _health;
     splitThreshold = _splitThreshold;
+    preferredDirection = _preferredDirection;
   }
 
   class DirHelper {
@@ -51,10 +53,8 @@ class Bacteria {
     //println("x:" + x +",y "+y);
 
     ColorGridPoint pointUnderMe = grid.getVal(x, y);
-    health -= Globals.BacteriaCostOfLiving;
 
     float underMeHueDist = Angle.minDist(pointUnderMe.hue, hue.val);
-    println("A:"+pointUnderMe.hue+" "+ hue.val+" = "+underMeHueDist);
     float underMeEatProb = (float)Math.customProb1(underMeHueDist,hueFoodSelectivity.val);
     
     float nibble = underMeEatProb*pointUnderMe.mag;
@@ -72,7 +72,11 @@ class Bacteria {
         if (p.occ != null && (!(dx == 0 && dy == 0))) continue;
         float hueDist = Angle.minDist(p.hue, hue.val);
         float hueProb = (float)Math.customProb1(hueDist, hueFoodSelectivity.val);
-        float prob = hueProb*p.mag;
+        float angle = (dx == 0 && dy == 0) ? preferredDirection.val : atan2(dy,dx);
+        float angleDist = Angle.minDist(angle, preferredDirection.val);
+        float directionProb = (float)Math.customProb1(angleDist, Globals.BacteriaDirectionSelectivity);
+               
+        float prob = hueProb*p.mag*directionProb;
 
         //if (dx == 1) prob *= 1000;
 
@@ -86,6 +90,8 @@ class Bacteria {
         possibleDirections.add(dirH);
       }
     }
+    
+    health -= Globals.BacteriaCostOfLiving;
 
     //if (debug) println(possibleDirections.size());
 
@@ -133,7 +139,8 @@ class Bacteria {
       hue.clone(), 
       hueFoodSelectivity.clone(), 
       health, 
-      splitThreshold.clone());
+      splitThreshold.clone(),
+      preferredDirection.clone());
     newBac.mutate();
 
     ColorGridPoint p = grid.getVal(newBac.x, newBac.y);
@@ -146,6 +153,7 @@ class Bacteria {
     hue.mutate();
     hueFoodSelectivity.mutate();
     splitThreshold.mutate();
+    preferredDirection.mutate();
   }
 
   void show() {
