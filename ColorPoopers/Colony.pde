@@ -9,7 +9,7 @@ class Colony {
     for (int bacIdx = 0; bacIdx < numBac; bacIdx++) {
       int x = (int)random(grid.width);
       int y = (int)random(grid.height);
-      Mutator hueMutator = new Mutator(MutatorType.Angle, Globals.BacteriaInitHue, Globals.BacteriaInitHueROM, Globals.BacteriaInitHueROROM);
+      Mutator hueMutator = new Mutator(MutatorType.Angle, random(0,TWO_PI), Globals.BacteriaInitHueROM, Globals.BacteriaInitHueROROM);
       Mutator foodSelectMutator = new Mutator(MutatorType.ZeroToInfinity, Globals.BacteriaInitFoodSelect, Globals.BacteriaInitFoodSelectROM, Globals.BacteriaInitFoodSelectROROM);
       Mutator splitThreshMutator = new Mutator(MutatorType.ZeroToInfinity, Globals.BacteriaInitSplitThreshold, Globals.BacteriaInitSplitThresholdROM, Globals.BacteriaInitSplitThresholdROROM);
       bacteria.add(new Bacteria(x, y, hueMutator, foodSelectMutator, Globals.BacteriaInitHealth, splitThreshMutator));

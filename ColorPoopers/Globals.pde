@@ -1,7 +1,7 @@
 static class Globals {
 
   static public int DisplayScaleFactor = 2;
-  static public float GridRegenerationPercentage = 0.005;
+  static public float GridRegenerationPercentage = 0.001;
   
   // Bacteria
   static public float BacteriaInitHue = 0;
