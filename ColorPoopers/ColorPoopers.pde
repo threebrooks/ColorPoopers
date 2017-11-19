@@ -5,15 +5,15 @@ void setup() {
 
   size(600, 480);
   colorMode(HSB);
-  frameRate(100);
+  frameRate(1);
 
   grid = new ColorGrid(width/Globals.DisplayScaleFactor, height/Globals.DisplayScaleFactor);
-  colony = new Colony(100, grid);
+  colony = new Colony(1, grid);
 }
 
 void draw() {
 
-  for (int stepIdx = 0; stepIdx < 10; stepIdx++) {
+  for (int stepIdx = 0; stepIdx < 1; stepIdx++) {
     grid.regenerate();
     colony.step();
     colony.procreate();
@@ -24,7 +24,7 @@ void draw() {
   //clear();
   //colony.show();
 
-  if (mousePressed) {
+  if (true) {
     colony.dumpBacteriaStats();
   }
   //println(frameRate);

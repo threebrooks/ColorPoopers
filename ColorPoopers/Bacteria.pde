@@ -54,14 +54,16 @@ class Bacteria {
     health -= Globals.BacteriaCostOfLiving;
 
     float underMeHueDist = Angle.minDist(pointUnderMe.hue, hue.val);
-    float underMeEatProb = Math.normalProb(underMeHueDist,hueFoodSelectivity.val);
+    println("A:"+pointUnderMe.hue+" "+ hue.val+" = "+underMeHueDist);
+    float underMeEatProb = (float)Math.customProb1(underMeHueDist,hueFoodSelectivity.val);
+    
     float nibble = underMeEatProb*pointUnderMe.mag;
     health += nibble;
     pointUnderMe.mag -= nibble;
 
     // New hue is essentially a mixture of old and poop
     float poopColor = Angle.opposite(hue.val);
-    pointUnderMe.hue  = Angle.limit(pointUnderMe.hue+nibble*Angle.minDist(poopColor, pointUnderMe.hue));
+    pointUnderMe.hue  = poopColor;//Angle.limit(pointUnderMe.hue+nibble*Angle.minDist(poopColor, pointUnderMe.hue));
 
     ArrayList<DirHelper> possibleDirections = new ArrayList<DirHelper>();
     for (int dx = -1; dx <= 1; dx++) {
@@ -69,7 +71,7 @@ class Bacteria {
         ColorGridPoint p = grid.getVal(x+dx, y+dy);
         if (p.occ != null && (!(dx == 0 && dy == 0))) continue;
         float hueDist = Angle.minDist(p.hue, hue.val);
-        float hueProb = Math.normalProb(hueDist, hueFoodSelectivity.val);
+        float hueProb = (float)Math.customProb1(hueDist, hueFoodSelectivity.val);
         float prob = hueProb*p.mag;
 
         //if (dx == 1) prob *= 1000;

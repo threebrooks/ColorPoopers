@@ -9,7 +9,7 @@ class Colony {
     for (int bacIdx = 0; bacIdx < numBac; bacIdx++) {
       int x = (int)random(grid.width);
       int y = (int)random(grid.height);
-      Mutator hueMutator = new Mutator(MutatorType.Angle, random(0,TWO_PI), Globals.BacteriaInitHueROM, Globals.BacteriaInitHueROROM);
+      Mutator hueMutator = new Mutator(MutatorType.Angle, Globals.BacteriaInitHue, Globals.BacteriaInitHueROM, Globals.BacteriaInitHueROROM);
       Mutator foodSelectMutator = new Mutator(MutatorType.ZeroToInfinity, Globals.BacteriaInitFoodSelect, Globals.BacteriaInitFoodSelectROM, Globals.BacteriaInitFoodSelectROROM);
       Mutator splitThreshMutator = new Mutator(MutatorType.ZeroToInfinity, Globals.BacteriaInitSplitThreshold, Globals.BacteriaInitSplitThresholdROM, Globals.BacteriaInitSplitThresholdROROM);
       bacteria.add(new Bacteria(x, y, hueMutator, foodSelectMutator, Globals.BacteriaInitHealth, splitThreshMutator));
@@ -69,11 +69,11 @@ class Colony {
       avgFoodSelectivity /= bacteria.size();
       avgSplitThresh /= bacteria.size();
       println("#bac: "+bacteria.size()+", avg health: "+avgHealth+", avg foodselect "+avgFoodSelectivity+", avg split "+avgSplitThresh);
-      /*PrintWriter p = new PrintWriter("/tmp/bac.stats");
+      PrintWriter p = new PrintWriter("/tmp/bac.stats");
       for (int idx = 0; idx < res; idx++) {
         p.write(histo[idx]+"\n");
       }
-      p.close(); */
+      p.close(); 
     } 
     catch (Exception e) {
       println(e.getMessage());
