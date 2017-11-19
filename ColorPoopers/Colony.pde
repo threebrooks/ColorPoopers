@@ -9,7 +9,10 @@ class Colony {
     for (int bacIdx = 0; bacIdx < numBac; bacIdx++) {
       int x = (int)random(grid.width);
       int y = (int)random(grid.height);
-      bacteria.add(new Bacteria(x, y, Globals.BacteriaInitMuHue, Globals.BacteriaInitSigmaHue, Globals.BacteriaInitHealth, Globals.BacteriaInitSplitThreshold, Globals.BacteriaInitMutationMuHueMag));
+      Mutator hueMutator = new Mutator(MutatorType.Angle, Globals.BacteriaInitHue, Globals.BacteriaInitHueROM, Globals.BacteriaInitHueROROM);
+      Mutator foodSelectMutator = new Mutator(MutatorType.ZeroToInfinity, Globals.BacteriaInitFoodSelect, Globals.BacteriaInitFoodSelectROM, Globals.BacteriaInitFoodSelectROROM);
+      Mutator splitThreshMutator = new Mutator(MutatorType.ZeroToInfinity, Globals.BacteriaInitSplitThreshold, Globals.BacteriaInitSplitThresholdROM, Globals.BacteriaInitSplitThresholdROROM);
+      bacteria.add(new Bacteria(x, y, hueMutator, foodSelectMutator, Globals.BacteriaInitHealth, splitThreshMutator));
     }
   }
 
@@ -23,7 +26,6 @@ class Colony {
 
   void procreate() {
     int currentSize = bacteria.size();
-    //println(currentSize);
     for (int bacIdx = 0; bacIdx < currentSize; bacIdx++) {
       Bacteria bac = bacteria.get(bacIdx);
       Bacteria clone = bac.procreate(grid);
@@ -36,9 +38,9 @@ class Colony {
       if (bac.health < 0) deathList.add(bac);
     }
     for (Bacteria b : deathList) {
-      if (!bacteria.remove(b)) println("WTF");
+      bacteria.remove(b);
       ColorGridPoint pointUnderNewBac = grid.getVal(b.x, b.y);
-      pointUnderNewBac.occ = false;
+      pointUnderNewBac.occ = null;
     }
   }
 
@@ -53,19 +55,25 @@ class Colony {
     try {
       int res = 100;
       int[] histo = new int[res];
-      float totalHealth = 0.0;
+      float avgHealth = 0.0;
+      float avgFoodSelectivity = 0.0;
+      float avgSplitThresh = 0.0;
       for (int bacIdx = 0; bacIdx < bacteria.size(); bacIdx++) {
         Bacteria bac = bacteria.get(bacIdx);
-        histo[(int)(res*bac.muHue/TWO_PI)]++;
-        totalHealth += bac.health;
-        //println(bacIdx+": x="+bac.x+", y="+bac.y+", h="+bac.health+", mu="+bac.muHue+", sig="+bac.sigmaHue);
+        histo[(int)(res*bac.hue.val/TWO_PI)]++;
+        avgHealth += bac.health;
+        avgFoodSelectivity += bac.hueFoodSelectivity.val;
+        avgSplitThresh += bac.splitThreshold.val;
       }
-      println("T: "+totalHealth/bacteria.size());
-      PrintWriter p = new PrintWriter("/tmp/bac.stats");
+      avgHealth /= bacteria.size();
+      avgFoodSelectivity /= bacteria.size();
+      avgSplitThresh /= bacteria.size();
+      println("#bac: "+bacteria.size()+", avg health: "+avgHealth+", avg foodselect "+avgFoodSelectivity+", avg split "+avgSplitThresh);
+      /*PrintWriter p = new PrintWriter("/tmp/bac.stats");
       for (int idx = 0; idx < res; idx++) {
         p.write(histo[idx]+"\n");
       }
-      p.close();
+      p.close(); */
     } 
     catch (Exception e) {
       println(e.getMessage());

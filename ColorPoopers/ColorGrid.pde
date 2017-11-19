@@ -11,7 +11,7 @@ class ColorGrid {
     for (int x = 0; x < this.width; x++) {
       grid.add(new ArrayList<ColorGridPoint>(this.height));
       for (int y = 0; y < this.height; y++) {
-        grid.get(x).add(new ColorGridPoint(0.0f, 1.0f, false));
+        grid.get(x).add(new ColorGridPoint(0.0f, 1.0f, null));
       }
     }
 
