@@ -11,20 +11,7 @@ class ColorGrid {
     for (int x = 0; x < this.width; x++) {
       grid.add(new ArrayList<ColorGridPoint>(this.height));
       for (int y = 0; y < this.height; y++) {
-        grid.get(x).add(new ColorGridPoint(0.0f, 1.0f, null));
-      }
-    }
-
-    float noiseScale = 0.01;
-    for (int x = 0; x < this.width; x++) {
-      for (int y = 0; y < this.height; y++) {
-        float distFromCenter = sqrt((x-this.width/2)*(x-this.width/2)+(y-this.height/2)*(y-this.height/2));
-        //float hue = map(distFromCenter, 0, sqrt(width*width/4+height*height/4), 0, TWO_PI);
-        //float hue = TWO_PI*noise(noiseScale*x, noiseScale*y);
-        //float hue = PI*(1.0+atan(2*(x-this.width/2)/(float)this.width));
-        float hue = (x > -1) ? 0.0 : PI;
-        ColorGridPoint point = getVal(x,y);
-        point.hue = hue;
+        grid.get(x).add(new ColorGridPoint(1.0f, null));
       }
     }
   }
@@ -53,18 +40,9 @@ class ColorGrid {
     for (int x = 0; x < this.width; x++) {
       for (int y = 0; y < this.height; y++) {
         ColorGridPoint p = getVal(x, y);
-        fill(color(radianToHue(p.hue), 255, magToBrightness(p.mag)));
+        fill(color(p.food,p.food,p.food));
         noStroke();
-        rect(Globals.DisplayScaleFactor*x, Globals.DisplayScaleFactor*y, Globals.DisplayScaleFactor, Globals.DisplayScaleFactor);//, );
-      }
-    }
-  }
-  
-  void regenerate() {
-    for (int x = 0; x < this.width; x++) {
-      for (int y = 0; y < this.height; y++) {
-        ColorGridPoint p = getVal(x, y);
-        p.mag += (1.0-p.mag)*Globals.GridRegenerationPercentage;
+        rect(Globals.DisplayScaleFactor*x, Globals.DisplayScaleFactor*y, Globals.DisplayScaleFactor, Globals.DisplayScaleFactor);
       }
     }
   }

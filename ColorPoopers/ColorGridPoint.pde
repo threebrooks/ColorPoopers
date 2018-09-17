@@ -1,11 +1,11 @@
+import java.awt.Color;
+
 class ColorGridPoint {
-  float hue;
-  float mag;
+  float food;
   Bacteria occ;
   
-  ColorGridPoint(float _hue, float _mag, Bacteria _occ) {
-    hue = _hue;
-    mag = _mag;
+  ColorGridPoint(float _food, Bacteria _occ) {
+    food = _food;
     occ = _occ;
   }
 }
